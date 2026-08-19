@@ -41,11 +41,6 @@ body{
   overflow-x:hidden;
   letter-spacing:-.01em;
 }
-.bg-blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.bg-blobs::before,.bg-blobs::after{content:'';position:absolute;border-radius:50%;filter:blur(90px);opacity:.55}
-.bg-blobs::before{width:560px;height:560px;background:radial-gradient(circle,#D9ECFB 0%,transparent 70%);top:-180px;right:-120px}
-.bg-blobs::after{width:640px;height:640px;background:radial-gradient(circle,#CBE4F8 0%,transparent 70%);bottom:-260px;left:-180px}
-.blob3{position:absolute;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,#DFF0FB 0%,transparent 70%);filter:blur(80px);opacity:.6;top:40%;left:38%}
 .wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:28px 24px 80px}
 
 /* ---------- header ---------- */
@@ -125,7 +120,6 @@ header{display:flex;align-items:center;justify-content:space-between;padding:6px
 .task:hover{border-color:var(--line2);box-shadow:var(--shadow-sm)}
 .task.done{background:#F3F8FD;opacity:.72}
 .task.done .task-text{text-decoration:line-through;color:var(--faint)}
-.task .grip{color:#C6DAEB;cursor:grab;font-size:13px;flex:none;letter-spacing:-1px}
 .task input[type=checkbox]{appearance:none;width:21px;height:21px;flex:none;border:2px solid var(--line2);border-radius:8px;cursor:pointer;position:relative;transition:.2s;background:#fff}
 .task input[type=checkbox]:checked{border-color:transparent}
 .task input[type=checkbox]:checked::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;border-radius:6px}
@@ -275,7 +269,6 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
 </style>
 </head>
 <body>
-<div class="bg-blobs"><div class="blob3"></div></div>
 <div class="wrap">
 
 <header>
@@ -283,7 +276,7 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
     <div class="logo-mark">F</div>
     <h1>FLOW<span>DAY</span></h1>
   </div>
-  <div class="today-chip"><span class="dot"></span><span id="todayChip"></span></div>
+  <div class="today-chip"><span id="todayChip"></span></div>
 </header>
 
 <!-- hero -->
@@ -314,8 +307,7 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
       </div>
       <div>
         <div class="stat-big"><span id="doneCount">0</span><small>/ <span id="totalCount">0</span> 완료</small></div>
-        <div class="stat-sub" id="cheerMsg">오늘도 화이팅! 🌱</div>
-      </div>
+              </div>
     </div>
   </div>
 
@@ -327,8 +319,7 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
         <div class="stat-sub"><span id="sessionCount">집중 세션 0회</span></div>
       </div>
     </div>
-    <div class="subject-dots" id="subjectDots"><i></i><i></i><i></i><i></i></div>
-  </div>
+    </div>
 </section>
 
 <!-- main -->
@@ -338,7 +329,6 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
     <div class="card panel" id="plannerPanel">
       <div class="panel-head">
         <div>
-          <div class="panel-tag">PLANNER</div>
           <h2 id="plannerTitle">8월 19일 수요일</h2>
         </div>
         <div class="seg">
@@ -379,7 +369,6 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
     <div class="card panel">
       <div class="panel-head">
         <div>
-          <div class="panel-tag">FOCUS</div>
           <h2>공부 시간</h2>
         </div>
         <div class="focus-head-right" id="focusStatus"><span class="st-dot"></span><span id="focusStatusText">대기 중</span></div>
@@ -390,15 +379,15 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
         <div class="timer-main" id="timerMain">00:00:00</div>
         <div class="timer-rest" id="timerRest" style="visibility:hidden">휴식 00:00:00</div>
         <div class="timer-btns">
-          <button class="btn btn-primary" id="btnSession">▶ 세션 시작</button>
-          <button class="btn btn-soft-peach" id="btnRest" style="display:none">☕ 휴식</button>
+          <button class="btn btn-primary" id="btnSession">세션 시작</button>
+          <button class="btn btn-soft-peach" id="btnRest" style="display:none">휴식</button>
           <button class="btn btn-ghost" id="btnEnd">공부 종료</button>
         </div>
       </div>
 
       <div class="tt">
         <div class="tt-head">
-          <h4>오늘의 타임테이블</h4>
+          <h4>타임테이블</h4>
           <div><span class="tt-total" id="ttTotal">0분</span><button id="editLog">기록 편집</button></div>
         </div>
         <div class="tt-days" id="ttDays"></div>
@@ -412,7 +401,6 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
     <div class="card panel">
       <div class="panel-head">
         <div>
-          <div class="panel-tag">MOCK TEST</div>
           <h2>모의고사</h2>
         </div>
       </div>
@@ -436,21 +424,19 @@ footer{text-align:center;font-size:12px;font-weight:600;color:#B4CCE0;padding-to
             <button class="btn btn-primary btn-sm" id="mockStart">시작</button>
             <button class="btn btn-ghost btn-sm" id="mockReset">초기화</button>
           </div>
-          <button class="voice-btn on" id="voiceBtn">🔔 음성 알림 켜짐</button>
+          <button class="voice-btn on" id="voiceBtn">음성 알림 켜짐</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<footer>FLOWDAY · 매일의 흐름을 만드는 스터디 플래너 ☁️</footer>
 </div>
 
 <!-- log edit modal -->
 <div class="modal-bg" id="modalBg">
   <div class="modal">
     <h3>공부 기록 편집</h3>
-    <p id="modalDate">오늘 과목별 공부 시간을 분 단위로 수정할 수 있어요.</p>
     <div id="modalRows"></div>
     <div class="modal-btns">
       <button class="btn btn-ghost btn-sm" id="modalCancel">취소</button>
@@ -595,22 +581,12 @@ function renderStats(){
   $('donutArc').style.strokeDashoffset = 194.8*(1-pct/100);
   $('doneCount').textContent = done;
   $('totalCount').textContent = total;
-  $('cheerMsg').textContent = total===0 ? '할 일을 추가해 보세요 ✏️'
-    : pct===100 ? '오늘 목표 달성! 🎉'
-    : pct>=50 ? '절반 넘게 왔어요 💪'
-    : '오늘도 화이팅! 🌱';
 
   const base = dayTotalSec(todayStr());
   const live = (S.timer && S.timer.date===todayStr()) ? liveSessionSec() : 0;
   $('todayStudy').textContent = minLabel(base+live);
   $('sessionCount').textContent = `집중 세션 ${S.sessions[todayStr()]||0}회`;
 
-  const l = dayLog(todayStr());
-  const dots = $('subjectDots').children;
-  SUBJECTS.forEach((s,i)=>{
-    const on = (l[s.key]||0)>0 || (S.timer && S.timer.date===todayStr() && S.timer.subj===s.key);
-    dots[i].style.background = on ? s.hex : 'var(--line2)';
-  });
 }
 
 /* ---------- render: planner daily ---------- */
@@ -653,7 +629,6 @@ function renderTasks(){
       const row = document.createElement('div');
       row.className = 'task'+(x.done?' done':'');
       row.innerHTML = `
-        <span class="grip">⠿</span>
         <input type="checkbox" ${x.done?'checked':''}>
         ${x.carry?'<span class="carry">이월</span>':''}
         <span class="task-text">${escapeHtml(x.text)}</span>
@@ -665,7 +640,7 @@ function renderTasks(){
         </div>`;
       const cb = row.querySelector('input');
       cb.style.setProperty('accent-color', s.hex);
-      cb.onchange = ()=>{ x.done = cb.checked; saveState(); renderAll(); if(cb.checked) maybeCelebrate(); };
+      cb.onchange = ()=>{ x.done = cb.checked; saveState(); renderAll(); };
       if(x.done){ cb.style.background=s.hex; cb.style.borderColor=s.hex; }
       cb.addEventListener('change',()=>{ /* restyle happens in rerender */ });
       // checked style
@@ -686,7 +661,7 @@ function renderTasks(){
     });
     // add row
     const add = document.createElement('div'); add.className='add-row';
-    add.innerHTML = `<span class="plus">+</span><input placeholder="${s.name} 할 일 추가" maxlength="80"><button>추가</button>`;
+    add.innerHTML = `<span class="plus">+</span><input placeholder="할 일 추가" maxlength="80"><button>추가</button>`;
     const inp = add.querySelector('input');
     const doAdd = ()=>{ const v=inp.value.trim(); if(!v) return; list.push({id:uid(),text:v,done:false}); inp.value=''; saveState(); renderAll(); inp.focus(); };
     add.querySelector('button').onclick = doAdd;
@@ -700,10 +675,6 @@ function styleCheckbox(cb,hex){
   apply(); cb.addEventListener('change',apply);
 }
 function escapeHtml(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function maybeCelebrate(){
-  const {done,total}=countDay(selDate);
-  if(total>0 && done===total) toast('오늘의 할 일을 모두 끝냈어요! 🎉');
-}
 
 /* ---------- render: planner weekly ---------- */
 function renderWeekly(){
@@ -750,7 +721,7 @@ $('wkNext').onclick = ()=>{ weekAnchor = addDays(weekAnchor,7); selDate = fmt(we
 $('clearDone').onclick = ()=>{
   const t = dayTasks(selDate);
   SUBJECTS.forEach(s=>{ t[s.key] = t[s.key].filter(x=>!x.done); });
-  saveState(); renderAll(); toast('완료된 항목을 정리했어요 🧹');
+  saveState(); renderAll();
 };
 function renderPlanner(){ renderPlannerTitle(); renderWeekStrip(); renderTasks(); renderWeekly(); }
 
@@ -781,7 +752,6 @@ function startSession(){
   if(S.timer){ endSession(true); }
   S.timer = {subj:focusSubj, startTs:now, accum:0, onBreak:false, breakStartTs:0, breakAccum:0, date:todayStr()};
   saveState(); renderFocus();
-  toast(`${SUBJ[focusSubj].name} 집중 세션 시작! 🔥`);
 }
 function toggleBreak(){
   if(!S.timer) return;
@@ -809,7 +779,7 @@ function endSession(silent){
     const startSec = Math.max(0, (Date.now() - (sec+liveBreakSec())*1000 - parse(t.date).getTime())/1000);
     const endSec = Math.min(86400, (end.getTime() - parse(t.date).getTime())/1000);
     S.segs[t.date].push({s:Math.floor(startSec), e:Math.floor(endSec), subj:t.subj});
-    if(!silent) toast(`${SUBJ[t.subj].name} ${minLabel(sec)} 공부 기록 완료 ✨`);
+    if(!silent) toast(`${minLabel(sec)} 기록 완료`);
   }
   S.timer = null;
   saveState(); renderFocus(); renderStats(); renderTimetable();
@@ -826,19 +796,19 @@ function renderFocus(){
   const st = $('focusStatus');
   st.classList.remove('running','resting');
   if(S.timer){
-    $('btnSession').innerHTML = '▶ 새 세션';
+    $('btnSession').textContent = '새 세션';
     $('btnRest').style.display = '';
     $('btnEnd').disabled = false;
     if(S.timer.onBreak){
       st.classList.add('resting'); $('focusStatusText').textContent = '휴식 중';
-      $('btnRest').innerHTML = '▶ 재개';
+      $('btnRest').textContent = '재개';
     }else{
       st.classList.add('running'); $('focusStatusText').textContent = '집중 중';
-      $('btnRest').innerHTML = '☕ 휴식';
+      $('btnRest').textContent = '휴식';
     }
     $('timerRest').style.visibility = '';
   }else{
-    $('btnSession').innerHTML = '▶ 세션 시작';
+    $('btnSession').textContent = '세션 시작';
     $('btnRest').style.display = 'none';
     $('btnEnd').disabled = true;
     $('focusStatusText').textContent = '대기 중';
@@ -912,8 +882,6 @@ function shortTime(sec){
 
 /* log edit modal */
 $('editLog').onclick = ()=>{
-  const d = parse(ttDate);
-  $('modalDate').textContent = `${d.getMonth()+1}월 ${d.getDate()}일 과목별 공부 시간을 분 단위로 수정해요.`;
   const rows = $('modalRows'); rows.innerHTML='';
   const l = dayLog(ttDate);
   SUBJECTS.forEach(su=>{
@@ -931,7 +899,7 @@ $('modalSave').onclick = ()=>{
     l[inp.dataset.k] = Math.max(0, Number(inp.value)||0)*60;
   });
   saveState(); $('modalBg').classList.remove('show');
-  renderTimetable(); renderStats(); toast('공부 기록을 수정했어요 ✏️');
+  renderTimetable(); renderStats();
 };
 
 /* ====================== MOCK TEST ====================== */
@@ -992,7 +960,7 @@ function startMock(){
       clearInterval(mockTimer.intId);
       renderMockRing(0, mockTimer.total);
       speak('시험이 종료되었습니다. 수고했어요.');
-      toast(`${SUBJ[mockSubj].name} 모의고사 종료! 🔔`);
+      toast('모의고사 종료');
       mockTimer=null; $('mockStart').textContent='시작';
       return;
     }
@@ -1003,7 +971,7 @@ function stopMock(silent){
   if(mockTimer){ clearInterval(mockTimer.intId); mockTimer=null; }
   $('mockStart').textContent='시작';
   renderMockRing(S.mock.durations[mockSubj]*60, S.mock.durations[mockSubj]*60);
-  if(!silent) toast('모의고사 타이머를 초기화했어요');
+  
 }
 $('mockStart').onclick = startMock;
 $('mockReset').onclick = ()=>stopMock(false);
@@ -1014,7 +982,7 @@ $('voiceBtn').onclick = ()=>{
 function renderVoiceBtn(){
   const b = $('voiceBtn');
   b.classList.toggle('on', S.mock.voice);
-  b.textContent = S.mock.voice ? '🔔 음성 알림 켜짐' : '🔕 음성 알림 꺼짐';
+  b.textContent = S.mock.voice ? '음성 알림 켜짐' : '음성 알림 꺼짐';
 }
 function renderMock(){ renderMockList(); renderMockRing(S.mock.durations[mockSubj]*60, S.mock.durations[mockSubj]*60); renderVoiceBtn(); }
 
