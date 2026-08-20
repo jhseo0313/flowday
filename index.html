@@ -242,13 +242,17 @@ main>*{max-width:1200px;margin-left:auto;margin-right:auto}
 .modal-bg{position:fixed;inset:0;background:rgba(25,45,65,.4);display:none;align-items:center;justify-content:center;z-index:50}
 .modal-bg.show{display:flex}
 .modal{background:#fff;border-radius:12px;padding:24px;width:min(380px,92vw)}
-.modal h3{font-size:16px;font-weight:800;margin-bottom:16px}
-.modal .m-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.modal .m-row i{width:8px;height:8px;border-radius:2px}
-.modal .m-row b{flex:1;font-size:13.5px;font-weight:700}
-.modal .m-row input{width:84px;border:1px solid var(--line2);border-radius:7px;font-size:13.5px;font-weight:700;padding:8px 10px;outline:none;text-align:right;color:var(--ink)}
-.modal .m-row input:focus{border-color:var(--blue-mid)}
-.modal .m-row span{font-size:12px;color:var(--faint);font-weight:700}
+.modal h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.modal .m-desc{font-size:12px;font-weight:600;color:var(--faint);margin-bottom:14px}
+.m-sess{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.m-sess select{border:1px solid var(--line2);border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;padding:8px 6px;outline:none;color:var(--ink);background:#fff;cursor:pointer}
+.m-sess input[type=time]{flex:1;min-width:0;border:1px solid var(--line2);border-radius:7px;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 8px;outline:none;color:var(--ink)}
+.m-sess input:focus,.m-sess select:focus{border-color:var(--blue-mid)}
+.m-sess .tilde{color:var(--faint);font-size:12px;font-weight:700}
+.m-sess .del{border:none;background:none;color:var(--faint);font-size:13px;cursor:pointer;padding:4px 6px;border-radius:5px}
+.m-sess .del:hover{color:var(--kor);background:#FFF0F5}
+.m-empty{font-size:12.5px;font-weight:600;color:var(--faint);text-align:center;padding:14px 0}
+#modalAdd{width:100%;margin-top:6px}
 .modal-btns{display:flex;gap:7px;justify-content:flex-end;margin-top:18px}
 .btn-sm{padding:9px 15px;font-size:12.5px;border-radius:7px}
 #toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(16px);background:var(--ink);color:#fff;font-size:13px;font-weight:700;border-radius:8px;padding:11px 20px;opacity:0;pointer-events:none;transition:.25s;z-index:99}
@@ -400,8 +404,10 @@ main>*{max-width:1200px;margin-left:auto;margin-right:auto}
 
 <div class="modal-bg" id="modalBg">
   <div class="modal">
-    <h3>공부 기록 편집</h3>
+    <h3 id="modalTitle">공부 기록 편집</h3>
+    <div class="m-desc">세션별로 과목과 시작·종료 시각을 수정할 수 있어요. 과목별 합계는 자동 계산돼요.</div>
     <div id="modalRows"></div>
+    <button class="btn btn-ghost btn-sm" id="modalAdd">+ 세션 추가</button>
     <div class="modal-btns">
       <button class="btn btn-ghost btn-sm" id="modalCancel">취소</button>
       <button class="btn btn-primary btn-sm" id="modalSave">저장</button>
@@ -774,21 +780,61 @@ function renderLog(){
   });
   $('logMeta').textContent = `집중 세션 ${S.sessions[logDate]||0}회`;
 }
-$('editLog').onclick = ()=>{
+const secToHM = sec => `${pad(Math.min(23,Math.floor(sec/3600)))}:${pad(Math.floor(sec%3600/60))}`;
+const hmToSec = v => { const [h,m]=v.split(':').map(Number); return (h||0)*3600+(m||0)*60; };
+function sessRow(seg){
+  const r = document.createElement('div'); r.className='m-sess';
+  const opts = SUBJECTS.map(su=>`<option value="${su.key}" ${su.key===seg.subj?'selected':''}>${su.name}</option>`).join('');
+  r.innerHTML = `<select>${opts}</select><input type="time" class="ts" value="${secToHM(seg.s)}"><span class="tilde">~</span><input type="time" class="te" value="${secToHM(seg.e)}"><button class="del">✕</button>`;
+  r.querySelector('.del').onclick = ()=>r.remove();
+  return r;
+}
+function renderModalRows(){
   const rows = $('modalRows'); rows.innerHTML='';
-  const l = dayLog(logDate);
-  SUBJECTS.forEach(su=>{
-    const r = document.createElement('div'); r.className='m-row';
-    r.innerHTML = `<i style="background:${su.hex}"></i><b>${su.name}</b><input type="number" min="0" max="1440" data-k="${su.key}" value="${Math.round((l[su.key]||0)/60)}"><span>분</span>`;
-    rows.appendChild(r);
-  });
+  const segs = (S.segs[logDate]||[]).slice().sort((a,b)=>a.s-b.s);
+  segs.forEach(seg=>rows.appendChild(sessRow(seg)));
+  updateModalEmpty();
+}
+function updateModalEmpty(){
+  const rows = $('modalRows');
+  let em = rows.querySelector('.m-empty');
+  const has = rows.querySelectorAll('.m-sess').length>0;
+  if(!has && !em){ em=document.createElement('div'); em.className='m-empty'; em.textContent='기록된 세션이 없어요'; rows.appendChild(em); }
+  if(has && em) em.remove();
+}
+$('editLog').onclick = ()=>{
+  const d = parse(logDate);
+  $('modalTitle').textContent = `공부 기록 편집 · ${d.getMonth()+1}월 ${d.getDate()}일`;
+  renderModalRows();
   $('modalBg').classList.add('show');
+};
+$('modalAdd').onclick = ()=>{
+  const rows = $('modalRows');
+  const last = [...rows.querySelectorAll('.m-sess .te')].pop();
+  const start = last ? Math.min(23*3600, hmToSec(last.value)) : 9*3600;
+  rows.appendChild(sessRow({s:start, e:Math.min(86340,start+3600), subj:'kor'}));
+  updateModalEmpty();
 };
 $('modalCancel').onclick = ()=>$('modalBg').classList.remove('show');
 $('modalBg').onclick = e=>{ if(e.target===$('modalBg')) $('modalBg').classList.remove('show'); };
 $('modalSave').onclick = ()=>{
-  const l = dayLog(logDate);
-  $('modalRows').querySelectorAll('input').forEach(inp=>{ l[inp.dataset.k]=Math.max(0,Number(inp.value)||0)*60; });
+  const segs = [];
+  let bad = false;
+  $('modalRows').querySelectorAll('.m-sess').forEach(r=>{
+    const subj = r.querySelector('select').value;
+    const s = hmToSec(r.querySelector('.ts').value);
+    let e = hmToSec(r.querySelector('.te').value);
+    if(e===s) e = s+60;
+    if(e<s){ bad=true; r.querySelector('.te').style.borderColor='var(--kor)'; return; }
+    segs.push({s,e,subj});
+  });
+  if(bad){ toast('종료 시각이 시작 시각보다 늦어야 해요'); return; }
+  segs.sort((a,b)=>a.s-b.s);
+  S.segs[logDate] = segs;
+  const l = {kor:0,mat:0,eng:0,exp:0};
+  segs.forEach(g=>{ l[g.subj]+= g.e-g.s; });
+  S.log[logDate] = l;
+  S.sessions[logDate] = segs.length;
   saveState(); $('modalBg').classList.remove('show'); renderLog(); renderStat();
 };
 
