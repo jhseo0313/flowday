@@ -598,7 +598,7 @@ function renderKanban(){
         span.contentEditable='true'; span.focus();
         const finish = ()=>{ span.contentEditable='false'; const v=span.textContent.trim(); if(v) x.text=v; saveState(); renderKanban(); };
         span.onblur = finish;
-        span.onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); span.blur(); } if(e.key==='Escape'){ span.textContent=x.text; span.blur(); } };
+        span.onkeydown = e=>{ if(e.isComposing||e.keyCode===229) return; if(e.key==='Enter'){ e.preventDefault(); span.blur(); } if(e.key==='Escape'){ span.textContent=x.text; span.blur(); } };
       };
       klist.appendChild(el);
     });
@@ -606,7 +606,7 @@ function renderKanban(){
     const doAdd = ()=>{ const v=inp.value.trim(); if(!v) return; list.push({id:uid(),text:v,done:false}); inp.value=''; saveState(); renderStrip(); renderStat(); renderKanban();
       wrap.querySelectorAll('.kadd input')[SUBJECTS.indexOf(s)].focus(); };
     col.querySelector('.kadd button').onclick = doAdd;
-    inp.onkeydown = e=>{ if(e.key==='Enter') doAdd(); };
+    inp.onkeydown = e=>{ if(e.isComposing||e.keyCode===229) return; if(e.key==='Enter') doAdd(); };
     wrap.appendChild(col);
   });
 }
@@ -714,7 +714,7 @@ function renderWeek(){
     const inp = card.querySelector('.kadd input');
     const doAdd = ()=>{ const v=inp.value.trim(); if(!v) return; list.push({id:uid(),text:v,done:false}); inp.value=''; saveState(); renderWeek(); };
     card.querySelector('.kadd button').onclick = doAdd;
-    inp.onkeydown = e=>{ if(e.key==='Enter') doAdd(); };
+    inp.onkeydown = e=>{ if(e.isComposing||e.keyCode===229) return; if(e.key==='Enter') doAdd(); };
     wrap.appendChild(card);
   });
 }
